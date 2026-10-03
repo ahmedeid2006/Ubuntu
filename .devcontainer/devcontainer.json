@@ -1,13 +1,22 @@
 {
-  "name": "Full Ubuntu Environment",
+  "name": "Ubuntu XFCE Desktop",
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": true,
-      "installOhMyZsh": true
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
     }
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Desktop GUI",
+      "onAutoForward": "notify"
+    }
+  },
+  "postStartCommand": "vncserver -kill :1 || true && vncserver :1 -SecurityTypes None -geometry 1366x768 -depth 24 && websockify -D --web /usr/share/novnc/ 6080 localhost:5901"
 }
