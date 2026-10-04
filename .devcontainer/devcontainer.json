@@ -1,22 +1,32 @@
 {
-  "name": "Ubuntu XFCE Desktop",
+  "name": "Ubuntu Full Desktop Environment",
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "codespace-password",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+  "runArgs": [
+    "--shm-size=2g",
+    "--init"
+  ],
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Ubuntu Desktop",
+      "requireLocalPort": true
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup-desktop.sh",
   "customizations": {
     "vscode": {
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
-  },
-  "remoteUser": "vscode",
-  "forwardPorts": [6080],
-  "portsAttributes": {
-    "6080": {
-      "label": "Desktop GUI",
-      "onAutoForward": "notify"
-    }
-  },
-  "postStartCommand": "vncserver -kill :1 || true && vncserver :1 -SecurityTypes None -geometry 1366x768 -depth 24 && websockify -D --web /usr/share/novnc/ 6080 localhost:5901"
+  }
 }
